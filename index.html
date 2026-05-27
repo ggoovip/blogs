@@ -4,63 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>blogs.nyc.mn - 数字花园</title>
-    <!-- Tailwind CSS 与 官方排版插件 -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <!-- Highlight.js 高雅暗黑代码主题 (Github Dark Theme) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
-    <!-- EasyMDE 可视化编辑器 -->
     <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
     <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        /* 优质平滑滚动 */
         html { scroll-behavior: smooth; }
-        
-        /* 代码复制容器及按钮微调 */
         .code-block-wrapper { position: relative; }
         .copy-btn {
             position: absolute; top: 10px; right: 10px;
             background: rgba(255, 255, 255, 0.08); color: #9ca3af;
             border: 1px solid rgba(156, 163, 175, 0.15); border-radius: 6px;
-            padding: 4px 10px; font-size: 11px; cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 4px 10px; font-size: 11px; cursor: pointer; transition: all 0.2s;
         }
-        .copy-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; border-color: rgba(255, 255, 255, 0.3); }
-
-        /* EasyMDE 编辑器现代感微调 */
-        .editor-toolbar {
-            border: 1px solid #e4e4e7 !important;
-            border-bottom: none !important;
-            background: #fafafa;
-            border-radius: 8px 8px 0 0 !important;
-            padding: 8px 12px !important;
-        }
-        .CodeMirror {
-            border: 1px solid #e4e4e7 !important;
-            border-radius: 0 0 8px 8px !important;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-            font-size: 14px !important;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.01) !important;
-        }
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+        .editor-toolbar { border: 1px solid #e4e4e7 !important; border-bottom: none !important; background: #fafafa; border-radius: 8px 8px 0 0 !important; }
+        .CodeMirror { border: 1px solid #e4e4e7 !important; border-radius: 0 0 8px 8px !important; font-size: 14px !important; }
     </style>
 </head>
 <body class="bg-[#fcfcfc] text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 顶栏 (毛玻璃设计) -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-zinc-100 sticky top-0 z-50 transition-all">
+    <!-- 导航栏 -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-zinc-100 sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
             <a href="#" onclick="goHome(); return false;" class="flex items-center space-x-2">
                 <span class="w-3.5 h-3.5 bg-indigo-600 rounded-full flex items-center justify-center animate-pulse"></span>
@@ -78,10 +56,9 @@
         
         <!-- 视图一：前台首页 -->
         <div id="home-view" class="space-y-10">
-            <!-- 欢迎条 -->
             <div class="border-b border-zinc-100 pb-8">
-                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">数字花园与教程空间</h1>
-                <p class="text-zinc-500 text-sm mt-2 leading-relaxed">在这里记录关于网络、工具、代码与日常生活的极简实践。</p>
+                <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">无服务器数字花园</h1>
+                <p class="text-zinc-500 text-sm mt-2 leading-relaxed">动态闭环渲染，基于 Cloudflare Pages + R2 + D1 强力驱动。</p>
             </div>
 
             <div class="space-y-6">
@@ -99,10 +76,8 @@
                 <span id="post-date"></span>
                 <span id="post-views-count">阅读量: 加载中...</span>
             </div>
-            <!-- 精修排版类 -->
             <article id="post-content" class="prose prose-zinc prose-indigo max-w-none 
                 prose-headings:font-bold prose-headings:tracking-tight
-                prose-p:leading-relaxed prose-p:text-zinc-600
                 prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100
                 prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
             </article>
@@ -110,18 +85,16 @@
 
         <!-- 视图三：后台管理端 -->
         <div id="admin-view" class="hidden space-y-8">
-            <!-- 密码输入区 -->
             <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm flex flex-col sm:flex-row items-end gap-4">
                 <div class="flex-grow w-full">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">输入后台管理员密码解锁</label>
-                    <input type="password" id="admin-pass" onchange="unlockAdmin()" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入配置的环境变量密码">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">管理员密码</label>
+                    <input type="password" id="admin-pass" onchange="unlockAdmin()" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="验证后台密码">
                 </div>
                 <button onclick="unlockAdmin()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 h-10 rounded-lg text-sm font-semibold transition-all shadow-sm w-full sm:w-auto">
                     解锁后台
                 </button>
             </div>
 
-            <!-- 控制面板：列表与新增 -->
             <div id="admin-panel" class="hidden space-y-8">
                 <!-- 文章列表与管理 -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm">
@@ -136,7 +109,7 @@
                             <thead>
                                 <tr class="border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                     <th class="py-3">文章标题</th>
-                                    <th class="py-3">发布日期</th>
+                                    <th class="py-3">阅读量</th>
                                     <th class="py-3 text-right">操作</th>
                                 </tr>
                             </thead>
@@ -151,8 +124,8 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章唯一 ID (用作文件名，保存后不可改)</label>
-                            <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: cf-r2-tutorial">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章唯一 ID (不可修改)</label>
+                            <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: r2-database-guide">
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
@@ -161,7 +134,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">简短摘要 (用于首页卡片预览)</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">简短摘要</label>
                         <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                     </div>
 
@@ -175,7 +148,7 @@
                             取消
                         </button>
                         <button onclick="publishPost()" id="publish-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
-                            发布并同步至 GitHub
+                            直接发布（瞬间生效）
                         </button>
                     </div>
                 </div>
@@ -189,10 +162,10 @@
         <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • 服务运行正常</span>
+                <span>blogs.nyc.mn • R2 & D1 闭环系统</span>
             </div>
             <div class="text-[11px] text-zinc-400">
-                Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-indigo-500">Cloudflare Pages</a> & R2 & D1
+                Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-indigo-500">Cloudflare Pages</a>
             </div>
         </div>
     </footer>
@@ -200,6 +173,7 @@
     <script>
         let easyMDEInstance = null;
         let isEditing = false;
+        let R2_DOMAIN = ""; // 会在解锁后台或初始化时自动根据当前页面或固定值推算
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -230,7 +204,7 @@
                 element: document.getElementById('admin-content'),
                 spellChecker: false,
                 autosave: { enabled: false },
-                placeholder: "撰写教程...支持工具栏排版。可以直接拖拽或截屏后 Ctrl+V 粘贴图片，全自动存储到您的 R2 图床！",
+                placeholder: "撰写教程...支持工具栏。支持拖入/粘贴图片直接同步 R2！",
                 renderingConfig: { codeSyntaxHighlighting: true },
                 status: ["lines", "words", "cursor"],
                 toolbar: [
@@ -246,9 +220,7 @@
             codemirror.on("drop", async (editor, e) => {
                 e.preventDefault();
                 const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    await uploadImageViaEditor(files[0]);
-                }
+                if (files.length > 0) await uploadImageViaEditor(files[0]);
             });
 
             codemirror.on("paste", async (editor, e) => {
@@ -257,8 +229,7 @@
                     const item = items[index];
                     if (item.kind === 'file') {
                         e.preventDefault();
-                        const blob = item.getAsFile();
-                        await uploadImageViaEditor(blob);
+                        await uploadImageViaEditor(item.getAsFile());
                     }
                 }
             });
@@ -266,10 +237,7 @@
 
         async function uploadImageViaEditor(file) {
             const password = document.getElementById('admin-pass').value;
-            if (!password) {
-                alert('提示：请先输入管理员密码');
-                return;
-            }
+            if (!password) { alert('提示：请先输入管理员密码'); return; }
 
             const formData = new FormData();
             formData.append('image', file);
@@ -289,17 +257,19 @@
                 if (!res.ok) throw new Error(await res.text());
                 const data = await res.json();
 
-                const markdownImg = `![图片描述](${data.url})`;
+                // 获取并缓存 R2 域名，供读取文章时使用
+                const urlObj = new URL(data.url);
+                R2_DOMAIN = urlObj.origin; 
+
                 const content = doc.getValue();
-                const newContent = content.replace("[正在上传图片到 R2...]", markdownImg);
-                doc.setValue(newContent);
+                doc.setValue(content.replace("[正在上传图片到 R2...]", `![图片描述](${data.url})`));
             } catch (err) {
-                alert('图片上传到 R2 失败: ' + err.message);
-                const content = doc.getValue();
-                doc.setValue(content.replace("[正在上传图片到 R2...]", "\n[图片上传失败]\n"));
+                alert('图片上传失败: ' + err.message);
+                doc.setValue(doc.getValue().replace("[正在上传图片到 R2...]", "\n[图片上传失败]\n"));
             }
         }
 
+        // 1. 获取主页文章列表（直接向 D1 查询）
         async function showHomeView() {
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
@@ -309,7 +279,7 @@
             container.innerHTML = '<p class="text-zinc-400 text-sm">正在加载中...</p>';
 
             try {
-                const response = await fetch('./posts-list.json?_t=' + Date.now());
+                const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
                 container.innerHTML = '';
 
@@ -321,7 +291,7 @@
                 posts.forEach(post => {
                     container.innerHTML += `
                         <div class="bg-white p-6 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                            <span class="text-xs text-zinc-400 font-medium">${post.date}</span>
+                            <span class="text-xs text-zinc-400 font-medium">${post.date} • 阅读量: ${post.views}</span>
                             <h3 class="text-lg font-bold mt-1.5 mb-2 hover:text-indigo-600 transition-colors"><a href="#/post/${post.id}">${post.title}</a></h3>
                             <p class="text-zinc-500 text-sm mb-4 leading-relaxed">${post.summary}</p>
                             <a href="#/post/${post.id}" class="text-xs font-semibold tracking-wider text-indigo-600 hover:text-indigo-700 uppercase">开始阅读 →</a>
@@ -329,10 +299,11 @@
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<p class="text-red-500 text-sm">读取索引文件失败，请确保您已经完成了首次部署。</p>`;
+                container.innerHTML = `<p class="text-red-500 text-sm">读取数据库失败，请确保 D1 绑定和数据表已成功创建。</p>`;
             }
         }
 
+        // 2. 加载文章正文（直接向 R2 拉取 Markdown 文件）
         async function loadPost(postId) {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('admin-view').classList.add('hidden');
@@ -342,12 +313,15 @@
             postContent.innerHTML = '<p class="text-zinc-400 text-sm">正在加载...</p>';
 
             try {
-                const response = await fetch(`./posts/${postId}.md?_t=` + Date.now());
+                // 如果本地尚未缓存 R2_DOMAIN，先通过一个临时上传配置或默认推算
+                const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
+                const response = await fetch(`${r2Base}/posts/${postId}.md?_t=` + Date.now());
+                
                 if (!response.ok) throw new Error();
                 const text = await response.text();
                 postContent.innerHTML = marked.parse(text);
 
-                // 更新阅读数
+                // 计数并获取最新阅读量
                 fetch(`./api/views?id=${postId}`, { method: 'POST' })
                     .then(r => r.json())
                     .then(data => {
@@ -359,7 +333,7 @@
                 addCopyButtons();
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
             } catch (err) {
-                postContent.innerHTML = '<p class="text-red-500 text-sm">无法加载正文文件，可能正在同步，请等待一分钟后重试。</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确认该文章已正常发布且 R2 域名配置无误。</p>';
             }
         }
 
@@ -371,10 +345,7 @@
 
         async function unlockAdmin() {
             const password = document.getElementById('admin-pass').value;
-            if (!password) {
-                alert('密码不可为空');
-                return;
-            }
+            if (!password) { alert('密码不可为空'); return; }
             await refreshAdminTable();
             document.getElementById('admin-panel').classList.remove('hidden');
             initEasyMDE();
@@ -382,10 +353,10 @@
 
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
-            tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-zinc-400 text-xs">正在读取列表...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-zinc-400 text-xs">正在读取数据库...</td></tr>';
             
             try {
-                const response = await fetch('./posts-list.json?_t=' + Date.now());
+                const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
                 tbody.innerHTML = '';
 
@@ -398,7 +369,7 @@
                     tbody.innerHTML += `
                         <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
                             <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
-                            <td class="py-3.5 text-xs text-zinc-400">${post.date}</td>
+                            <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
                             <td class="py-3.5 text-right space-x-3">
                                 <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
                                 <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
@@ -407,7 +378,7 @@
                     `;
                 });
             } catch (err) {
-                tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-red-500 text-xs">列表加载失败，请核对密码。</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-red-500 text-xs">拉取列表失败，请核对密码。</td></tr>';
             }
         }
 
@@ -419,10 +390,11 @@
             document.getElementById('admin-summary').value = '';
             easyMDEInstance.value('');
             document.getElementById('editor-title').innerText = '撰写新教程';
-            document.getElementById('publish-btn').innerText = '发布并同步至 GitHub';
+            document.getElementById('publish-btn').innerText = '直接发布（瞬间生效）';
             document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // 瞬间发布：调用 POST /api/posts 直接写入 D1 + R2
         async function publishPost() {
             const password = document.getElementById('admin-pass').value;
             const id = document.getElementById('admin-id').value.trim();
@@ -436,11 +408,11 @@
                 return;
             }
 
-            btn.innerText = '正在同步仓库...';
+            btn.innerText = '正在同步至 D1 + R2...';
             btn.disabled = true;
 
             try {
-                const res = await fetch('./api/publish', {
+                const res = await fetch('./api/posts', {
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -450,21 +422,22 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('同步成功！请等待 GitHub-CF 编译重构（大约 1 分钟左右后刷新）。');
+                alert('文章发布成功！已瞬间写入 D1 数据库与 R2 存储。');
                 
                 await refreshAdminTable();
                 startNewPost();
             } catch (err) {
-                alert('同步失败: ' + err.message);
+                alert('发布失败: ' + err.message);
             } finally {
                 btn.disabled = false;
             }
         }
 
+        // 编辑载入：直接从 R2 读取 Markdown 文档进行编辑
         async function editPost(id, title, summary) {
             isEditing = true;
             document.getElementById('editor-title').innerText = `编辑教程: ${title}`;
-            document.getElementById('publish-btn').innerText = '更新并发布';
+            document.getElementById('publish-btn').innerText = '保存更新';
             
             const adminIdInput = document.getElementById('admin-id');
             adminIdInput.value = id;
@@ -473,23 +446,25 @@
             document.getElementById('admin-title').value = title;
             document.getElementById('admin-summary').value = summary;
 
-            easyMDEInstance.value('从仓库拉取原文内容中...');
+            easyMDEInstance.value('正在从 R2 提取正文内容...');
 
             try {
-                const res = await fetch(`./posts/${id}.md?_t=` + Date.now());
+                const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
+                const res = await fetch(`${r2Base}/posts/${id}.md?_t=` + Date.now());
                 if (!res.ok) throw new Error();
                 const text = await res.text();
                 easyMDEInstance.value(text);
                 document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
             } catch (e) {
-                alert('拉取失败，请检查文章文件是否存在于 GitHub');
+                alert('从 R2 读取正文失败');
                 easyMDEInstance.value('');
             }
         }
 
+        // 删除：直接调用 D1 和 R2 物理清除，立刻生效
         async function deletePost(id) {
             const password = document.getElementById('admin-pass').value;
-            if (!confirm(`警告：您确定要从 GitHub 物理删除该文章 [${id}] 吗？\n此操作不可逆。`)) return;
+            if (!confirm(`确定要从 D1 数据库和 R2 存储桶中物理删除该文章 [${id}] 吗？\n删除后不可恢复。`)) return;
 
             try {
                 const res = await fetch('./api/delete', {
@@ -499,7 +474,7 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('删除已发布，请稍候 1 分钟等待站点重构生效。');
+                alert('已成功从 D1 和 R2 中删除该文章，主页已同步更新！');
                 await refreshAdminTable();
             } catch (err) {
                 alert('删除失败: ' + err.message);
