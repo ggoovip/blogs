@@ -40,7 +40,7 @@
 </head>
 <body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 顶栏 (外链导航完全动态化) -->
+    <!-- 顶栏 (精简图标化后台入口) -->
     <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-6">
@@ -50,17 +50,21 @@
                     <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
                 </a>
                 
-                <!-- 一级大系列导航 -->
+                <!-- 大系列导航栏 -->
                 <div id="series-navbar-container" class="hidden lg:flex space-x-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
                 </div>
             </div>
             
             <div class="flex items-center space-x-6 shrink-0">
-                <!-- 【动态右上角外链容器】由 D1 数据库读取并直接渲染 -->
-                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500">
-                    <!-- 动态注入，如：订阅转换、IP查询等 -->
-                </div>
-                <a href="#/admin" class="bg-zinc-900 text-white hover:bg-zinc-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm">后台管理</a>
+                <!-- 动态右上角外链容器 -->
+                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500"></div>
+                
+                <!-- 【极简头像图标化后台入口】：低调隐蔽 -->
+                <a href="#/admin" class="text-zinc-400 hover:text-amber-500 transition-all p-1.5 rounded-full hover:bg-zinc-50 shrink-0" title="管理控制面板">
+                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </a>
             </div>
         </div>
     </nav>
@@ -159,21 +163,28 @@
                     </div>
                 </div>
 
-                <!-- 站点配置 (加入外链多行配置域) -->
+                <!-- 站点配置 (排版模式已挪至此处控制全局) -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局配置与大系列文案</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">主标题</label>
                             <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航（逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航栏列表（逗号隔开）</label>
                             <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 科学上网, 谷歌系列, NAS系列">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签（逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签列表（逗号隔开）</label>
                             <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局卡片排版模式</label>
+                            <select id="config-layout-mode" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                                <option value="standard">图片 + 标题 + 摘要 (标准)</option>
+                                <option value="simple">图片 + 标题 (精简)</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -216,10 +227,11 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 -->
+                <!-- 编辑器工作区 (大系列与子分类并排紧凑化) -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     
+                    <!-- 第一行：ID (不可修改) 与 文章主标题 -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
@@ -231,7 +243,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- 第二行：一二级分类选择 (已移除原本的排版选择器，使其保持最紧凑) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
                             <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
@@ -242,15 +255,9 @@
                             <select id="admin-category" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">卡片显示排版模式</label>
-                            <select id="admin-layout-mode" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
-                                <option value="standard">图片 + 标题 + 摘要 (标准)</option>
-                                <option value="simple">图片 + 标题 (精简)</option>
-                            </select>
-                        </div>
                     </div>
 
+                    <!-- 第三行：摘要与【R2一键上传封装封面图】 -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
@@ -258,7 +265,13 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页封面图 URL</label>
-                            <input type="text" id="admin-cover" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
+                            <div class="flex gap-2">
+                                <input type="text" id="admin-cover" class="flex-grow border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
+                                <!-- 一键物理上传至 R2 并回填按钮 -->
+                                <button onclick="triggerCoverUpload()" class="bg-zinc-800 hover:bg-zinc-900 text-white text-xs px-4 rounded-lg font-bold transition-all shrink-0">上传</button>
+                            </div>
+                            <!-- 隐藏的本地选图文件域 -->
+                            <input type="file" id="cover-file-input" accept="image/*" class="hidden" onchange="handleCoverFileSelected()">
                         </div>
                     </div>
 
@@ -312,10 +325,11 @@
         let currentFilterCategory = "";  
         let currentSearchQuery = "";     
         
-        let activeCategories = [];       // 二级分类列表
-        let activeSeriesList = [];       // 一级大系列列表
+        let activeCategories = [];       
+        let activeSeriesList = [];       
         let dbNavMeta = {};              
         let currentPageNum = 1;
+        let globalLayoutMode = "standard"; // 缓存全局卡片排版模式变量
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -357,25 +371,26 @@
                 const subtitle = data.site_subtitle || "无服务器数字花园";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
-                // 解码右上角动态外链 (如果没有数据，自动容错初始)
                 const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}, {"name": "IP查询", "url": "https://ip.blogs.nyc.mn"}, {"name": "It-Tools工具箱", "url": "https://it.blogs.nyc.mn"}]');
+                // 加载全局排版模式参数
+                globalLayoutMode = data.site_layout_mode || "standard";
 
                 document.title = title;
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
 
-                // 1. 动态渲染右上方外链导航
                 renderCustomNavbarLinks(rawNavLinks);
 
-                // 2. 填充后台全局配置卡片表单数据
+                // 2. 填充后台全局设置表单 (包含全局排版模式)
                 document.getElementById('config-title').value = title;
                 document.getElementById('config-subtitle').value = subtitle;
                 document.getElementById('config-categories').value = activeCategories.join(', ');
                 document.getElementById('config-series').value = activeSeriesList.join(', ');
-                
-                // 将 JSON 外链格式转化为多行纯文本展示在 Textarea 内，极度方便维护
                 document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
+                
+                // 安全更新后台“全局排版”下拉框选项
+                document.getElementById('config-layout-mode').value = globalLayoutMode;
 
                 renderCategoryFilters();
                 fillCategorySelect();
@@ -392,7 +407,6 @@
             }
         }
 
-        // 动态向 Nav 栏渲染外部链接
         function renderCustomNavbarLinks(linksArray) {
             const container = document.getElementById('custom-navbar-links');
             if (!container) return;
@@ -500,6 +514,31 @@
             el.value = val;
         }
 
+        // 【大系列联动封面图上传】
+        function triggerCoverUpload() {
+            document.getElementById('cover-file-input').click();
+        }
+
+        async function handleCoverFileSelected() {
+            const fileInput = document.getElementById('cover-file-input');
+            if (fileInput.files.length === 0) return;
+            
+            const file = fileInput.files[0];
+            const uploadBtn = document.querySelector('button[onclick="triggerCoverUpload()"]');
+            
+            uploadBtn.innerText = '传中...';
+            uploadBtn.disabled = true;
+
+            const url = await uploadImageViaVditor(file); // 直接复用 R2 上传
+            if (url) {
+                document.getElementById('admin-cover').value = url; // 自动无感回填 R2 链接
+            }
+            
+            uploadBtn.innerText = '上传';
+            uploadBtn.disabled = false;
+            fileInput.value = ''; // 清空选择器
+        }
+
         async function filterByCategory(cat) {
             currentFilterCategory = cat;
             currentPageNum = 1;
@@ -555,6 +594,7 @@
             await fetchPopularPosts();
         }
 
+        // 4 列奶油栅格卡片核心渲染器 (现在使用【全局排版变量 globalLayoutMode】对所有卡片实现全局排版对齐)
         async function fetchPostsAndRender(page = 1) {
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
@@ -587,7 +627,8 @@
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none">BLOGS</div>`;
 
-                    const summaryHtml = (post.layout_mode !== 'simple')
+                    // 根据【全局 site_layout_mode】排版指令来决定是否物理隐藏摘要
+                    const summaryHtml = (globalLayoutMode !== 'simple')
                         ? `<p class="text-zinc-500 text-xs leading-relaxed line-clamp-2">${post.summary}</p>`
                         : '';
 
@@ -803,21 +844,21 @@
             document.getElementById('admin-login-card').classList.remove('hidden');
         }
 
-        // 保存全局设置并智能处理多行文本外链转换 (D1)
         async function saveSiteConfig() {
             const password = getActivePassword();
             const title = safeGetValue('config-title').trim();
             const subtitle = safeGetValue('config-subtitle').trim();
             const categoriesStr = safeGetValue('config-categories').trim();
             const seriesStr = safeGetValue('config-series').trim();
-            const navLinksStr = safeGetValue('config-nav-links').trim(); // 读取多行外链
+            const navLinksStr = safeGetValue('config-nav-links').trim(); 
+            // 读取全局排版配置
+            const site_layout_mode = document.getElementById('config-layout-mode').value;
             const btn = document.getElementById('save-config-btn');
 
             if (!title) { alert('主标题不可为空'); return; }
             const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
             const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
 
-            // 解析用户输入的多行普通文本外链为 D1 标准 JSON 数组
             const navLinksArr = navLinksStr.split('\n').map(line => {
                 const parts = line.split(',');
                 const name = parts[0] ? parts[0].trim() : "";
@@ -839,7 +880,8 @@
                         site_subtitle: subtitle,
                         site_categories: categoriesArr,
                         site_series: seriesArr,
-                        site_nav_links: navLinksArr // 保存解析好的外链数组
+                        site_nav_links: navLinksArr,
+                        site_layout_mode // 保存全局排版到 D1
                     })
                 });
 
@@ -992,8 +1034,6 @@
             if (adminSeries) {
                 adminSeries.value = activeSeriesList[0] || '默认系列';
             }
-            const adminLayout = document.getElementById('admin-layout-mode');
-            if (adminLayout) adminLayout.value = 'standard';
             const adminCategory = document.getElementById('admin-category');
             if (adminCategory) {
                 adminCategory.value = activeCategories[0] || '未分类';
@@ -1012,16 +1052,15 @@
             if (editorZone) editorZone.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 【安全大重构】：防空保护，全链路监控并精准捕获和弹窗报错。
+        // 【安全大重构】：防空保护与异常控制
         async function publishPost() {
             try {
                 const password = getActivePassword();
                 const id = safeGetValue('admin-id').trim();
-                const title = safeGetValue('admin-title').trim(); // 完美恢复标题值获取！
+                const title = safeGetValue('admin-title').trim(); // 正常无错获取标题！
                 const summary = safeGetValue('admin-summary').trim();
                 const cover = safeGetValue('admin-cover').trim();
                 const series = safeGetValue('admin-series') || '默认系列';
-                const layout_mode = safeGetValue('admin-layout-mode') || 'standard';
                 const category = safeGetValue('admin-category') || '未分类';
 
                 if (!vditorInstance) {
@@ -1045,7 +1084,8 @@
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id, title, summary, content, category, cover, series, layout_mode,
+                        id, title, summary, content, category, cover, series,
+                        layout_mode: globalLayoutMode, // 随全局排版一起自动发布
                         date: new Date().toISOString().split('T')[0]
                     })
                 });
@@ -1072,6 +1112,7 @@
             }
         }
 
+        // 【安全黄金修复】：直接通过 safeGetValue 锁定节点，绝无 Null 崩溃
         async function editPost(index) {
             try {
                 if (!window.allPosts || !window.allPosts[index]) {
@@ -1101,7 +1142,6 @@
                 if (adminCover) adminCover.value = post.cover || '';
                 
                 setSelectValue('admin-series', post.series || '默认系列');
-                setSelectValue('admin-layout-mode', post.layout_mode || 'standard');
                 setSelectValue('admin-category', post.category || '未分类');
 
                 if (!vditorInstance) {
