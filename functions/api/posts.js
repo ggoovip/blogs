@@ -18,10 +18,18 @@ export async function onRequest(context) {
       const series = url.searchParams.get("series");
       const popularLimit = url.searchParams.get("popular");
       const getNavMeta = url.searchParams.get("get_nav_meta");
+      
+      // 判断是否是管理员后台发起的请求
+      const authHeader = request.headers.get("Authorization");
+      const isAdmin = await verifyPassword(authHeader, env);
 
-      // A. 特殊路由：动态获取一二级分类的层级元数据（用于生成顶部导航栏）
+      // A. 获取一二级导航元数据
       if (getNavMeta) {
-        const { results } = await env.DB.prepare("SELECT DISTINCT series, category FROM posts").all();
+        // 如果是管理员，获取所有文章一二级目关系；游客只获取公开文章的层级
+        let query = "SELECT DISTINCT series, category FROM posts";
+        if (!isAdmin) query += " WHERE status = 'publish'";
+        
+        const { results } = await env.DB.prepare(query).all();
         const navMeta = {};
         results.forEach(row => {
           const s = row.series || "默认系列";
@@ -32,16 +40,18 @@ export async function onRequest(context) {
         return new Response(JSON.stringify(navMeta), { headers: { "Content-Type": "application/json" } });
       }
 
-      // B. 如果是请求热门排行
+      // B. 获取热门排行 (游客模式下不显示隐藏文章)
       if (popularLimit) {
         const limit = parseInt(popularLimit) || 5;
-        const { results } = await env.DB.prepare(
-          "SELECT id, title, date, views, cover FROM posts ORDER BY views DESC LIMIT ?"
-        ).bind(limit).all();
+        const query = isAdmin 
+          ? "SELECT id, title, date, views, cover FROM posts ORDER BY views DESC LIMIT ?"
+          : "SELECT id, title, date, views, cover FROM posts WHERE status = 'publish' ORDER BY views DESC LIMIT ?";
+        
+        const { results } = await env.DB.prepare(query).bind(limit).all();
         return new Response(JSON.stringify(results), { headers: { "Content-Type": "application/json" } });
       }
 
-      // C. 标准列表（加入大系列、分页、搜索筛选）
+      // C. 标准列表（加入物理权重与状态控制）
       const page = parseInt(url.searchParams.get("page")) || 1;
       const limit = parseInt(url.searchParams.get("limit")) || 12;
       const offset = (page - 1) * limit;
@@ -49,6 +59,11 @@ export async function onRequest(context) {
       let whereClause = "";
       let params = [];
       let conditions = [];
+
+      // 游客模式强制过滤掉草稿/隐藏文章
+      if (!isAdmin) {
+        conditions.push("status = 'publish'");
+      }
 
       if (q) {
         conditions.push("(title LIKE ? OR summary LIKE ?)");
@@ -71,8 +86,8 @@ export async function onRequest(context) {
       const countResult = await env.DB.prepare(`SELECT COUNT(*) as count FROM posts ${whereClause}`).bind(...params).first();
       const total = countResult ? countResult.count : 0;
 
-      // 分页查询
-      let query = `SELECT id, title, summary, date, views, category, series, cover, layout_mode FROM posts ${whereClause} ORDER BY date DESC LIMIT ? OFFSET ?`;
+      // 核心排序：优先按照权重自大到小排列 (weight DESC)，其次按照日期倒序 (date DESC)
+      let query = `SELECT id, title, summary, date, views, category, series, cover, layout_mode, status, weight FROM posts ${whereClause} ORDER BY weight DESC, date DESC LIMIT ? OFFSET ?`;
       const { results } = await env.DB.prepare(query).bind(...params, limit, offset).all();
 
       return new Response(JSON.stringify({ results, total, page, limit }), {
@@ -84,7 +99,7 @@ export async function onRequest(context) {
     }
   }
 
-  // 2. POST 请求
+  // 2. POST 请求：保存/编辑文章
   if (request.method === "POST") {
     const authHeader = request.headers.get("Authorization");
     if (!(await verifyPassword(authHeader, env))) {
@@ -92,19 +107,20 @@ export async function onRequest(context) {
     }
 
     try {
-      const { id, title, summary, content, date, category, cover, series, layout_mode } = await request.json();
+      const { id, title, summary, content, date, category, cover, series, layout_mode, status, weight } = await request.json();
 
       await env.MY_BUCKET.put(`posts/${id}.md`, content, {
         httpMetadata: { contentType: "text/markdown; charset=utf-8" }
       });
 
+      // 保存至 D1 数据库
       await env.DB.prepare(`
-        INSERT INTO posts (id, title, summary, date, category, cover, series, layout_mode, views) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
-        ON CONFLICT(id) DO UPDATE SET title = ?, summary = ?, category = ?, cover = ?, series = ?, layout_mode = ?
+        INSERT INTO posts (id, title, summary, date, category, cover, series, layout_mode, status, weight, views) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+        ON CONFLICT(id) DO UPDATE SET title = ?, summary = ?, category = ?, cover = ?, series = ?, layout_mode = ?, status = ?, weight = ?
       `).bind(
-        id, title, summary, date, category || '未分类', cover || '', series || '默认系列', layout_mode || 'standard',
-        title, summary, category || '未分类', cover || '', series || '默认系列', layout_mode || 'standard'
+        id, title, summary, date, category || '未分类', cover || '', series || '默认系列', layout_mode || 'standard', status || 'publish', parseInt(weight) || 0,
+        title, summary, category || '未分类', cover || '', series || '默认系列', layout_mode || 'standard', status || 'publish', parseInt(weight) || 0
       ).run();
 
       return new Response(JSON.stringify({ success: true }), { headers: { "Content-Type": "application/json" } });
