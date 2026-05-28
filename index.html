@@ -40,7 +40,7 @@
 </head>
 <body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 顶栏 -->
+    <!-- 顶栏 (外链导航完全动态化) -->
     <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-6">
@@ -50,16 +50,17 @@
                     <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
                 </a>
                 
-                <!-- 大系列导航栏 -->
+                <!-- 一级大系列导航 -->
                 <div id="series-navbar-container" class="hidden lg:flex space-x-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
                 </div>
             </div>
             
-            <div class="flex items-center space-x-6 text-xs font-semibold text-zinc-500 shrink-0">
-                <a href="https://sub.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">订阅转换</a>
-                <a href="https://ip.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">IP查询</a>
-                <a href="https://it.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">It-Tools工具箱</a>
-                <a href="#/admin" class="bg-zinc-900 text-white hover:bg-zinc-800 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm">后台管理</a>
+            <div class="flex items-center space-x-6 shrink-0">
+                <!-- 【动态右上角外链容器】由 D1 数据库读取并直接渲染 -->
+                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500">
+                    <!-- 动态注入，如：订阅转换、IP查询等 -->
+                </div>
+                <a href="#/admin" class="bg-zinc-900 text-white hover:bg-zinc-800 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm">后台管理</a>
             </div>
         </div>
     </nav>
@@ -158,7 +159,7 @@
                     </div>
                 </div>
 
-                <!-- 站点配置 -->
+                <!-- 站点配置 (加入外链多行配置域) -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局配置与大系列文案</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -167,17 +168,23 @@
                             <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航栏列表（用英文逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航（逗号隔开）</label>
                             <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 科学上网, 谷歌系列, NAS系列">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签列表（用英文逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签（逗号隔开）</label>
                             <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">副标题 / 描述说明</label>
-                        <input type="text" id="config-subtitle" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">副标题 / 描述说明</label>
+                            <input type="text" id="config-subtitle" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">右上角自定义外链 (格式: 名称, 链接，一行一个)</label>
+                            <textarea id="config-nav-links" rows="3" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-xs font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
+                        </div>
                     </div>
                     <div class="flex justify-end pt-2 border-t border-zinc-100">
                         <button onclick="saveSiteConfig()" id="save-config-btn" class="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2 rounded-lg text-xs font-semibold transition-all shadow-sm">
@@ -209,11 +216,10 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 (第一栏修正：1/4宽度唯一 ID + 3/4宽度文章主标题) -->
+                <!-- 编辑器工作区 -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     
-                    <!-- 第一行：ID (不可修改) 与 文章主标题 -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
@@ -225,7 +231,6 @@
                         </div>
                     </div>
 
-                    <!-- 第二行：一二级分类和排版选择 -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
@@ -246,7 +251,6 @@
                         </div>
                     </div>
 
-                    <!-- 第三行：摘要与封面图 URL -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
@@ -308,8 +312,8 @@
         let currentFilterCategory = "";  
         let currentSearchQuery = "";     
         
-        let activeCategories = [];       
-        let activeSeriesList = [];       
+        let activeCategories = [];       // 二级分类列表
+        let activeSeriesList = [];       // 一级大系列列表
         let dbNavMeta = {};              
         let currentPageNum = 1;
 
@@ -353,18 +357,27 @@
                 const subtitle = data.site_subtitle || "无服务器数字花园";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
+                // 解码右上角动态外链 (如果没有数据，自动容错初始)
+                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}, {"name": "IP查询", "url": "https://ip.blogs.nyc.mn"}, {"name": "It-Tools工具箱", "url": "https://it.blogs.nyc.mn"}]');
 
                 document.title = title;
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
 
-                renderCategoryFilters();
+                // 1. 动态渲染右上方外链导航
+                renderCustomNavbarLinks(rawNavLinks);
+
+                // 2. 填充后台全局配置卡片表单数据
                 document.getElementById('config-title').value = title;
                 document.getElementById('config-subtitle').value = subtitle;
                 document.getElementById('config-categories').value = activeCategories.join(', ');
                 document.getElementById('config-series').value = activeSeriesList.join(', ');
+                
+                // 将 JSON 外链格式转化为多行纯文本展示在 Textarea 内，极度方便维护
+                document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
 
+                renderCategoryFilters();
                 fillCategorySelect();
                 fillSeriesSelect();
 
@@ -377,6 +390,18 @@
                 fillCategorySelect();
                 fillSeriesSelect();
             }
+        }
+
+        // 动态向 Nav 栏渲染外部链接
+        function renderCustomNavbarLinks(linksArray) {
+            const container = document.getElementById('custom-navbar-links');
+            if (!container) return;
+            container.innerHTML = '';
+            linksArray.forEach(item => {
+                container.innerHTML += `
+                    <a href="${item.url}" target="_blank" class="hover:text-amber-500 transition-colors">${item.name}</a>
+                `;
+            });
         }
 
         async function fetchNavMeta() {
@@ -445,6 +470,7 @@
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
         }
 
+        // 安全节点值获取器
         function safeGetValue(id) {
             const el = document.getElementById(id);
             if (!el) {
@@ -777,24 +803,34 @@
             document.getElementById('admin-login-card').classList.remove('hidden');
         }
 
+        // 保存全局设置并智能处理多行文本外链转换 (D1)
         async function saveSiteConfig() {
+            const password = getActivePassword();
+            const title = safeGetValue('config-title').trim();
+            const subtitle = safeGetValue('config-subtitle').trim();
+            const categoriesStr = safeGetValue('config-categories').trim();
+            const seriesStr = safeGetValue('config-series').trim();
+            const navLinksStr = safeGetValue('config-nav-links').trim(); // 读取多行外链
+            const btn = document.getElementById('save-config-btn');
+
+            if (!title) { alert('主标题不可为空'); return; }
+            const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+            const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+
+            // 解析用户输入的多行普通文本外链为 D1 标准 JSON 数组
+            const navLinksArr = navLinksStr.split('\n').map(line => {
+                const parts = line.split(',');
+                const name = parts[0] ? parts[0].trim() : "";
+                const url = parts[1] ? parts[1].trim() : "";
+                return { name, url };
+            }).filter(item => item.name && item.url);
+
+            if (btn) {
+                btn.innerText = '正在提交...';
+                btn.disabled = true;
+            }
+
             try {
-                const password = getActivePassword();
-                const title = safeGetValue('config-title').trim();
-                const subtitle = safeGetValue('config-subtitle').trim();
-                const categoriesStr = safeGetValue('config-categories').trim();
-                const seriesStr = safeGetValue('config-series').trim();
-                const btn = document.getElementById('save-config-btn');
-
-                if (!title) { alert('主标题不可为空'); return; }
-                const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
-                const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
-
-                if (btn) {
-                    btn.innerText = '正在提交...';
-                    btn.disabled = true;
-                }
-
                 const res = await fetch('./api/config', {
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
@@ -802,7 +838,8 @@
                         site_title: title,
                         site_subtitle: subtitle,
                         site_categories: categoriesArr,
-                        site_series: seriesArr
+                        site_series: seriesArr,
+                        site_nav_links: navLinksArr // 保存解析好的外链数组
                     })
                 });
 
@@ -810,14 +847,9 @@
                 alert('配置修改成功！');
                 await loadSiteConfig();
                 await fetchNavMeta(); 
-                
-                if (btn) {
-                    btn.innerText = '更新配置（瞬间生效）';
-                    btn.disabled = false;
-                }
             } catch (e) {
-                alert('全局配置修改失败，详细原因: ' + e.message);
-                const btn = document.getElementById('save-config-btn');
+                alert('修改失败');
+            } finally {
                 if (btn) {
                     btn.innerText = '更新配置（瞬间生效）';
                     btn.disabled = false;
@@ -985,8 +1017,7 @@
             try {
                 const password = getActivePassword();
                 const id = safeGetValue('admin-id').trim();
-                // 修复大Bug：这里之前由于 HTML 漏掉导致这一行在后台获取不到节点值
-                const title = safeGetValue('admin-title').trim();
+                const title = safeGetValue('admin-title').trim(); // 完美恢复标题值获取！
                 const summary = safeGetValue('admin-summary').trim();
                 const cover = safeGetValue('admin-cover').trim();
                 const series = safeGetValue('admin-series') || '默认系列';
@@ -1020,7 +1051,7 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('文章发布成功！新文章已经瞬间写入 D1 数据库与 R2 存储！');
+                alert('文章发布成功！');
                 
                 await refreshAdminTable();
                 await fetchNavMeta(); 
@@ -1032,7 +1063,7 @@
                 }
 
             } catch (err) {
-                alert('【发布失败】详细错误信息:\n' + err.message + '\n\n如果是 no such column 错误，说明您之前没有在 D1 中成功执行 ALTER 升级语句。请前往 D1 控制台补充执行。');
+                alert('【发布失败】详细错误信息:\n' + err.message);
                 const btn = document.getElementById('publish-btn');
                 if (btn) {
                     btn.disabled = false;
