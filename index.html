@@ -49,9 +49,8 @@
                     <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
                 </a>
                 
-                <!-- 【大系列一级导航栏】：由后台 D1 自动分析动态生成 -->
+                <!-- 【大系列一级导航栏】 -->
                 <div id="series-navbar-container" class="hidden lg:flex space-x-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                    <!-- 动态注入系列，例如：NAS系列、科学上网等 -->
                 </div>
             </div>
             
@@ -65,13 +64,13 @@
         </div>
     </nav>
 
-    <!-- 主体：自适应宽幅 -->
+    <!-- 主体：奶油卡片宽幅自适应 -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         <!-- 视图一：前台首页 -->
         <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
-            <!-- 左侧 3 栏：二级过滤与卡片流 -->
+            <!-- 左侧 3 栏 -->
             <div class="lg:col-span-3 space-y-6 flex flex-col justify-between">
                 <div class="space-y-6">
                     <!-- 顶部横幅 -->
@@ -161,19 +160,23 @@
 
                 <!-- 站点配置 -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
-                    <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局文案</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局配置与大系列文案</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">主标题</label>
                             <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局分类（英文逗号隔开）</label>
-                            <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航栏列表（用英文逗号隔开）</label>
+                            <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 科学上网, 谷歌系列, NAS系列">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签列表（用英文逗号隔开）</label>
+                            <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">副标题 / 描述</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">副标题 / 描述说明</label>
                         <input type="text" id="config-subtitle" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                     </div>
                     <div class="flex justify-end pt-2 border-t border-zinc-100">
@@ -196,7 +199,7 @@
                             <thead>
                                 <tr class="border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                     <th class="py-3">文章标题</th>
-                                    <th class="py-3">系列 -> 二级分类</th>
+                                    <th class="py-3">所属系列 ➔ 二级分类</th>
                                     <th class="py-3">阅读量</th>
                                     <th class="py-3 text-right">操作</th>
                                 </tr>
@@ -206,7 +209,7 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 (提供封面图 URL 栏配置) -->
+                <!-- 编辑器工作区 (大系列已升级为可配置下拉选择菜单) -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -215,8 +218,10 @@
                             <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航 (如: 科学上网, NAS系列)</label>
-                            <input type="text" id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="默认: 默认系列">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
+                            <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                                <!-- 由配置数据自动填充 -->
+                            </select>
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类选择</label>
@@ -224,7 +229,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">卡片排版显示模式</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">卡片显示排版模式</label>
                             <select id="admin-layout-mode" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
                                 <option value="standard">图片 + 标题 + 摘要 (标准)</option>
                                 <option value="simple">图片 + 标题 (精简)</option>
@@ -287,12 +292,13 @@
     <script>
         let vditorInstance = null;
         let R2_DOMAIN = "";
-        let currentFilterSeries = "";    // 当前大系列
-        let currentFilterCategory = "";  // 当前二级分类
-        let currentSearchQuery = "";     // 当前搜索词
+        let currentFilterSeries = "";    
+        let currentFilterCategory = "";  
+        let currentSearchQuery = "";     
         
-        let activeCategories = [];       // 当前已激活的二级分类列表
-        let dbNavMeta = {};              // 缓存从 D1 中读取到的一二级级联结构
+        let activeCategories = [];       // 当前已激活的二级类目列表
+        let activeSeriesList = [];       // 当前已激活的一级大系列导航列表
+        let dbNavMeta = {};              // 数据库中已有的一二级联动缓存
         let currentPageNum = 1;
 
         marked.setOptions({
@@ -305,8 +311,8 @@
 
         window.addEventListener('hashchange', handleRouting);
         window.addEventListener('load', async () => {
-            await loadSiteConfig(); // 1. 载入站点文案标题
-            await fetchNavMeta();   // 2. 动态分析一二级目分类，并填充顶部 Navbar
+            await loadSiteConfig(); // 1. 载入 D1 所有配置
+            await fetchNavMeta();   // 2. 分析并填充顶栏
             handleRouting();        // 3. 执行路由定位
         });
 
@@ -318,7 +324,6 @@
                 const postId = hash.replace('#/post/', '');
                 loadPost(postId);
             } else if (hash.startsWith('#/series/')) {
-                // 原生大系列路由触发，如：#/series/NAS系列
                 const seriesName = decodeURIComponent(hash.replace('#/series/', ''));
                 showSeriesView(seriesName);
             } else {
@@ -335,37 +340,49 @@
                 const title = data.site_title || "Blogs.nyc.mn";
                 const subtitle = data.site_subtitle || "无服务器数字花园";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
+                // 解密大系列列表并配置
+                activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
 
                 document.title = title;
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
 
+                // 渲染药丸和填充配置输入框
+                renderCategoryFilters();
                 document.getElementById('config-title').value = title;
                 document.getElementById('config-subtitle').value = subtitle;
                 document.getElementById('config-categories').value = activeCategories.join(', ');
+                document.getElementById('config-series').value = activeSeriesList.join(', ');
 
+                // 填充后台的二级分类和一级系列下拉列表！
                 fillCategorySelect();
+                fillSeriesSelect();
+
             } catch (err) {
                 console.error("加载全局配置出错:", err);
                 activeCategories = ["技术", "教程", "随笔", "思考"];
+                activeSeriesList = ["科学上网", "谷歌系列", "NAS系列"];
                 document.title = "blogs.nyc.mn";
+                renderCategoryFilters();
                 fillCategorySelect();
+                fillSeriesSelect();
             }
         }
 
-        // === 【核心逻辑：动态生成一二级级联目录】 ===
+        // 动态读取一二级系列联动的汇总（为了保证在 D1 还没文章时导航栏能亮，默认将后台全局写好的系列融入大导航栏）
         async function fetchNavMeta() {
             try {
                 const res = await fetch('./api/posts?get_nav_meta=true&_t=' + Date.now());
                 dbNavMeta = await res.json();
                 
-                // 渲染顶部 Navbar 的大系列导航
+                // 将从后台设置中手动配置的大系列列表（activeSeriesList）与数据库中实际存在的系列进行智能取并集
+                const finalSeriesList = Array.from(new Set([...activeSeriesList, ...Object.keys(dbNavMeta)]));
+
                 const navContainer = document.getElementById('series-navbar-container');
                 navContainer.innerHTML = '';
                 
-                // 遍历 D1 中检测到的所有大系列（大导航）
-                Object.keys(dbNavMeta).forEach(series => {
+                finalSeriesList.forEach(series => {
                     const isSelected = currentFilterSeries === series;
                     navContainer.innerHTML += `
                         <a href="#/series/${encodeURIComponent(series)}" class="hover:text-amber-500 transition-colors ${isSelected ? 'text-amber-500 font-bold border-b-2 border-amber-500 pb-1' : ''}">${series}</a>
@@ -376,15 +393,15 @@
             }
         }
 
-        // 渲染主页二级药丸标签栏 (如果是某大系列，二级药丸只展示该系列下存在的分类)
         function renderCategoryFilters() {
             const container = document.getElementById('category-filter-container');
             if (!container) return;
 
-            let allowedCategories = activeCategories; // 默认展示全局设置的分类
+            let allowedCategories = activeCategories; 
             
-            // 如果目前选中了某个一级大系列，二级药丸只展示属于这个系列底下的分类！
-            if (currentFilterSeries && dbNavMeta[currentFilterSeries]) {
+            // 如果选中了某大系列，二级药丸过滤优先展示数据库中属于该大系列底下的子分类，
+            // 若数据库尚未写入级联，则默认降级展示全局设置的分类。
+            if (currentFilterSeries && dbNavMeta[currentFilterSeries] && dbNavMeta[currentFilterSeries].length > 0) {
                 allowedCategories = dbNavMeta[currentFilterSeries];
             }
 
@@ -413,6 +430,17 @@
             select.innerHTML += `<option value="未分类">未分类</option>`;
         }
 
+        // 智能自动填充后台的一级系列 Select 下拉选项
+        function fillSeriesSelect() {
+            const select = document.getElementById('admin-series');
+            if (!select) return;
+            select.innerHTML = '';
+            activeSeriesList.forEach(series => {
+                select.innerHTML += `<option value="${series}">${series}</option>`;
+            });
+            select.innerHTML += `<option value="默认系列">默认系列</option>`;
+        }
+
         async function filterByCategory(cat) {
             currentFilterCategory = cat;
             currentPageNum = 1;
@@ -432,16 +460,15 @@
             await fetchPostsAndRender(1);
         }
 
-        // 首页展现逻辑（重置所有大类和小类过滤）
         async function showHomeView() {
-            currentFilterSeries = "";    // 清空大系列
-            currentFilterCategory = "";  // 清空二级分类
-            currentSearchQuery = "";     // 清空搜索
+            currentFilterSeries = "";    
+            currentFilterCategory = "";  
+            currentSearchQuery = "";     
             const sInput = document.getElementById('search-input');
             if (sInput) sInput.value = "";
 
-            await fetchNavMeta();        // 重新同步导航
-            renderCategoryFilters();     // 展现全部二级标签
+            await fetchNavMeta();        
+            renderCategoryFilters();     
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
@@ -451,16 +478,15 @@
             await fetchPopularPosts();
         }
 
-        // 切换到具体大系列下的视图
         async function showSeriesView(seriesName) {
-            currentFilterSeries = seriesName; // 设为当前大系列
-            currentFilterCategory = "";       // 重置二级类目
+            currentFilterSeries = seriesName; 
+            currentFilterCategory = "";       
             currentSearchQuery = "";
             const sInput = document.getElementById('search-input');
             if (sInput) sInput.value = "";
 
-            await fetchNavMeta();             // 重新标亮顶层大系列链接
-            renderCategoryFilters();          // 动态重新渲染二级分类小药丸！
+            await fetchNavMeta();             
+            renderCategoryFilters();          
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
@@ -470,7 +496,7 @@
             await fetchPopularPosts();
         }
 
-        // 4 列奶油栅格卡片核心渲染器 (支持 R2 封面图、一键跳转以及独立排版模式)
+        // 4 列奶油栅格卡片核心渲染器 (完全移除 👤 admin 标签)
         async function fetchPostsAndRender(page = 1) {
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
@@ -503,7 +529,6 @@
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none">BLOGS</div>`;
 
-                    // 根据 layout_mode 判断：如果是 standard 显示 2 行摘要，如果是 simple 则完全不显示摘要
                     const summaryHtml = (post.layout_mode !== 'simple')
                         ? `<p class="text-zinc-500 text-xs leading-relaxed line-clamp-2">${post.summary}</p>`
                         : '';
@@ -511,20 +536,19 @@
                     container.innerHTML += `
                         <div class="group bg-white rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
                             <div>
-                                <!-- 特色封面图：包住 A 标签支持点击跳转 -->
                                 <a href="#/post/${post.id}" class="block h-44 w-full overflow-hidden relative bg-zinc-50">
                                     ${coverHtml}
                                     <span class="absolute top-3 left-3 bg-zinc-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase">${post.category || '未分类'}</span>
                                 </a>
                                 <div class="p-5 space-y-2">
-                                    <!-- 标题限制单行：line-clamp-1 -->
+                                    <!-- 限制 1 行标题，规避错行 -->
                                     <h3 class="text-sm font-bold text-zinc-900 line-clamp-1 group-hover:text-amber-500 transition-colors">
                                         <a href="#/post/${post.id}">${post.title}</a>
                                     </h3>
                                     ${summaryHtml}
                                 </div>
                             </div>
-                            <!-- 底端 Meta 栏：完全移除 👤 admin 以保持极致干净 -->
+                            <!-- 移除 👤 admin，保持纯净 -->
                             <div class="px-5 pb-5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[10px] text-zinc-400">
                                 <span>📅 ${post.date}</span>
                                 <span>👁️ ${post.views}</span>
@@ -722,15 +746,18 @@
             document.getElementById('admin-login-card').classList.remove('hidden');
         }
 
+        // 保存全局设置（支持 site_series）
         async function saveSiteConfig() {
             const password = getActivePassword();
             const title = document.getElementById('config-title').value.trim();
             const subtitle = document.getElementById('config-subtitle').value.trim();
             const categoriesStr = document.getElementById('config-categories').value.trim();
+            const seriesStr = document.getElementById('config-series').value.trim();
             const btn = document.getElementById('save-config-btn');
 
             if (!title) { alert('主标题不可为空'); return; }
             const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+            const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
 
             btn.innerText = '正在提交...';
             btn.disabled = true;
@@ -742,13 +769,15 @@
                     body: JSON.stringify({
                         site_title: title,
                         site_subtitle: subtitle,
-                        site_categories: categoriesArr
+                        site_categories: categoriesArr,
+                        site_series: seriesArr
                     })
                 });
 
                 if (!res.ok) throw new Error();
                 alert('配置修改成功！');
                 await loadSiteConfig();
+                await fetchNavMeta(); // 同步顶层大系列
             } catch (e) {
                 alert('修改失败');
             } finally {
@@ -773,7 +802,7 @@
                 });
 
                 if (res.ok) {
-                    alert('后台密码已更新！');
+                    alert('密码已成功修改！');
                     closePasswordModal();
                     logoutAdmin();
                 } else {
@@ -839,6 +868,7 @@
             }
         }
 
+        // 【黄金修复】：后台表格不再传递大量长字符串参数，只传递 Index 索引，彻底避免任何引号冲突
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
@@ -847,22 +877,25 @@
             try {
                 const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
-                const postsArr = posts.results || posts;
+                
+                // 1. 将完整的文章数组直接存在全局缓存中，供编辑按钮使用
+                window.allPosts = posts.results || posts;
                 tbody.innerHTML = '';
 
-                if (postsArr.length === 0) {
+                if (window.allPosts.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">暂无文章</td></tr>';
                     return;
                 }
 
-                postsArr.forEach(post => {
+                // 2. 渲染管理表格：只向 editPost() 传递当前行在 window.allPosts 数组中的索引 Index
+                window.allPosts.forEach((post, index) => {
                     tbody.innerHTML += `
                         <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
                             <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
                             <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
                             <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
                             <td class="py-3.5 text-right space-x-3">
-                                <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}', '${post.category || '未分类'}', '${post.cover || ''}', '${post.series || '默认系列'}', '${post.layout_mode || 'standard'}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
+                                <button onclick="editPost(${index})" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
                                 <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
                             </td>
                         </tr>
@@ -880,7 +913,7 @@
             document.getElementById('admin-title').value = '';
             document.getElementById('admin-summary').value = '';
             document.getElementById('admin-cover').value = '';
-            document.getElementById('admin-series').value = '默认系列';
+            document.getElementById('admin-series').value = activeSeriesList[0] || '默认系列';
             document.getElementById('admin-layout-mode').value = 'standard';
             document.getElementById('admin-category').value = activeCategories[0] || '未分类';
             vditorInstance.setValue('');
@@ -895,7 +928,7 @@
             const title = document.getElementById('admin-title').value.trim();
             const summary = document.getElementById('admin-summary').value.trim();
             const cover = document.getElementById('admin-cover').value.trim();
-            const series = document.getElementById('admin-series').value.trim();
+            const series = document.getElementById('admin-series').value;
             const layout_mode = document.getElementById('admin-layout-mode').value;
             const category = document.getElementById('admin-category').value;
             const content = vditorInstance.getValue();
@@ -932,27 +965,31 @@
             }
         }
 
-        async function editPost(id, title, summary, category, cover, series, layout_mode) {
+        // 【黄金修复】：从全局缓存数组直接调取对象，100% 避免字符和排版折叠 Bug
+        async function editPost(index) {
+            if (!window.allPosts || !window.allPosts[index]) return;
+            const post = window.allPosts[index];
+
             isEditing = true;
-            document.getElementById('editor-title').innerText = `编辑教程: ${title}`;
+            document.getElementById('editor-title').innerText = `编辑教程: ${post.title}`;
             document.getElementById('publish-btn').innerText = '保存更新';
             
             const adminIdInput = document.getElementById('admin-id');
-            adminIdInput.value = id;
+            adminIdInput.value = post.id;
             adminIdInput.disabled = true;
             
-            document.getElementById('admin-title').value = title;
-            document.getElementById('admin-summary').value = summary;
-            document.getElementById('admin-cover').value = cover || '';
-            document.getElementById('admin-series').value = series || '默认系列';
-            document.getElementById('admin-layout-mode').value = layout_mode || 'standard';
-            document.getElementById('admin-category').value = category || '未分类';
+            document.getElementById('admin-title').value = post.title;
+            document.getElementById('admin-summary').value = post.summary;
+            document.getElementById('admin-cover').value = post.cover || '';
+            document.getElementById('admin-series').value = post.series || '默认系列';
+            document.getElementById('admin-layout-mode').value = post.layout_mode || 'standard';
+            document.getElementById('admin-category').value = post.category || '未分类';
 
             vditorInstance.setValue('正在从 R2 提取正文内容...');
 
             try {
                 const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
-                const res = await fetch(`${r2Base}/posts/${id}.md?_t=` + Date.now());
+                const res = await fetch(`${r2Base}/posts/${post.id}.md?_t=` + Date.now());
                 if (!res.ok) throw new Error();
                 const text = await res.text();
                 vditorInstance.setValue(text);
