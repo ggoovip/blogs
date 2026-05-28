@@ -39,20 +39,24 @@
 </head>
 <body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 顶栏 -->
+    <!-- 顶栏 (双级导航大重构) -->
     <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-8">
-                <a href="#/" class="flex items-center space-x-2">
+            <div class="flex items-center space-x-6">
+                <!-- LOGO -->
+                <a href="#/" class="flex items-center space-x-2 shrink-0">
                     <span class="w-3.5 h-3.5 bg-amber-500 rounded-full flex items-center justify-center animate-pulse"></span>
                     <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
                 </a>
-                <div class="hidden md:flex space-x-6 text-sm">
-                    <a href="#/" class="text-zinc-600 hover:text-amber-500 font-semibold transition-colors">首页</a>
+                
+                <!-- 【大系列一级导航栏】：由后台 D1 自动分析动态生成 -->
+                <div id="series-navbar-container" class="hidden lg:flex space-x-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                    <!-- 动态注入系列，例如：NAS系列、科学上网等 -->
                 </div>
             </div>
             
-            <div class="flex items-center space-x-6 text-xs font-semibold text-zinc-500">
+            <!-- 右上角外链跳转 -->
+            <div class="flex items-center space-x-6 text-xs font-semibold text-zinc-500 shrink-0">
                 <a href="https://sub.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">订阅转换</a>
                 <a href="https://ip.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">IP查询</a>
                 <a href="https://it.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">It-Tools工具箱</a>
@@ -61,13 +65,13 @@
         </div>
     </nav>
 
-    <!-- 主体：奶油卡片宽幅自适应 -->
+    <!-- 主体：自适应宽幅 -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         <!-- 视图一：前台首页 -->
         <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             
-            <!-- 左侧 3 栏：分类与4列卡片流 -->
+            <!-- 左侧 3 栏：二级过滤与卡片流 -->
             <div class="lg:col-span-3 space-y-6 flex flex-col justify-between">
                 <div class="space-y-6">
                     <!-- 顶部横幅 -->
@@ -76,22 +80,20 @@
                         <p id="site-subtitle-display" class="text-zinc-500 text-xs mt-1.5 leading-relaxed"></p>
                     </div>
 
-                    <!-- 分类选择栏 -->
+                    <!-- 二级子分类药丸栏 -->
                     <div id="category-filter-container" class="flex flex-wrap gap-2"></div>
 
-                    <!-- 卡片网格流 (升级为 4 列网格布局，紧凑视觉) -->
-                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-fade-in"></div>
+                    <!-- 4列卡片网格流 -->
+                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6"></div>
                 </div>
 
-                <!-- 复刻深色分页组件 -->
-                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-10">
-                    <!-- 分页由 JS 动态生成 -->
-                </div>
+                <!-- 分页 -->
+                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-10"></div>
             </div>
 
             <!-- 右侧 1 栏：侧边栏 -->
             <div class="space-y-6">
-                <!-- 侧边栏搜索框 -->
+                <!-- 搜索 -->
                 <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-3">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">文章检索</h3>
                     <div class="relative">
@@ -100,7 +102,7 @@
                     </div>
                 </div>
 
-                <!-- 侧边栏热门排行榜 -->
+                <!-- 热门排行 -->
                 <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-4">
                     <div class="border-b border-zinc-100 pb-2 flex items-center justify-between">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">🔥 热门文章</h3>
@@ -137,7 +139,7 @@
                     <p class="text-xs text-zinc-400 mt-1">请输入 D1 数据库中配置的管理密码解锁系统</p>
                 </div>
                 <div class="space-y-4">
-                    <input type="password" id="admin-pass" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入密码 (默认: admin123)">
+                    <input type="password" id="admin-pass" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入密码">
                     <button onclick="verifyAndLogin()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white py-2.5 rounded-lg text-sm font-semibold transition-all">
                         确认解锁
                     </button>
@@ -167,7 +169,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局分类（英文逗号隔开）</label>
-                            <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
+                            <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                     </div>
                     <div>
@@ -194,7 +196,7 @@
                             <thead>
                                 <tr class="border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                     <th class="py-3">文章标题</th>
-                                    <th class="py-3">分类</th>
+                                    <th class="py-3">系列 -> 二级分类</th>
                                     <th class="py-3">阅读量</th>
                                     <th class="py-3 text-right">操作</th>
                                 </tr>
@@ -204,21 +206,28 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 -->
+                <!-- 编辑器工作区 (提供封面图 URL 栏配置) -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
                             <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
-                            <input type="text" id="admin-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航 (如: 科学上网, NAS系列)</label>
+                            <input type="text" id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="默认: 默认系列">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">分类选择</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类选择</label>
                             <select id="admin-category" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">卡片排版显示模式</label>
+                            <select id="admin-layout-mode" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                                <option value="standard">图片 + 标题 + 摘要 (标准)</option>
+                                <option value="simple">图片 + 标题 (精简)</option>
                             </select>
                         </div>
                     </div>
@@ -228,7 +237,7 @@
                             <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页封面图 URL (支持 R2 链接)</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页封面图 URL</label>
                             <input type="text" id="admin-cover" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
                         </div>
                     </div>
@@ -267,7 +276,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="w-2 h-2 bg-amber-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • 奶油卡片 6.0 分页版</span>
+                <span>blogs.nyc.mn • 奶油门户 6.5 终极自适应版</span>
             </div>
             <div class="text-[11px] text-zinc-400">
                 Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-amber-500">Cloudflare Pages</a>
@@ -278,10 +287,13 @@
     <script>
         let vditorInstance = null;
         let R2_DOMAIN = "";
-        let currentFilterCategory = "";
-        let currentSearchQuery = "";
-        let activeCategories = [];
-        let currentPageNum = 1; // 记录当前页码
+        let currentFilterSeries = "";    // 当前大系列
+        let currentFilterCategory = "";  // 当前二级分类
+        let currentSearchQuery = "";     // 当前搜索词
+        
+        let activeCategories = [];       // 当前已激活的二级分类列表
+        let dbNavMeta = {};              // 缓存从 D1 中读取到的一二级级联结构
+        let currentPageNum = 1;
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -293,8 +305,9 @@
 
         window.addEventListener('hashchange', handleRouting);
         window.addEventListener('load', async () => {
-            await loadSiteConfig();
-            handleRouting();
+            await loadSiteConfig(); // 1. 载入站点文案标题
+            await fetchNavMeta();   // 2. 动态分析一二级目分类，并填充顶部 Navbar
+            handleRouting();        // 3. 执行路由定位
         });
 
         function handleRouting() {
@@ -304,6 +317,10 @@
             } else if (hash.startsWith('#/post/')) {
                 const postId = hash.replace('#/post/', '');
                 loadPost(postId);
+            } else if (hash.startsWith('#/series/')) {
+                // 原生大系列路由触发，如：#/series/NAS系列
+                const seriesName = decodeURIComponent(hash.replace('#/series/', ''));
+                showSeriesView(seriesName);
             } else {
                 showHomeView();
             }
@@ -324,7 +341,6 @@
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
 
-                renderCategoryFilters();
                 document.getElementById('config-title').value = title;
                 document.getElementById('config-subtitle').value = subtitle;
                 document.getElementById('config-categories').value = activeCategories.join(', ');
@@ -334,20 +350,50 @@
                 console.error("加载全局配置出错:", err);
                 activeCategories = ["技术", "教程", "随笔", "思考"];
                 document.title = "blogs.nyc.mn";
-                renderCategoryFilters();
                 fillCategorySelect();
             }
         }
 
+        // === 【核心逻辑：动态生成一二级级联目录】 ===
+        async function fetchNavMeta() {
+            try {
+                const res = await fetch('./api/posts?get_nav_meta=true&_t=' + Date.now());
+                dbNavMeta = await res.json();
+                
+                // 渲染顶部 Navbar 的大系列导航
+                const navContainer = document.getElementById('series-navbar-container');
+                navContainer.innerHTML = '';
+                
+                // 遍历 D1 中检测到的所有大系列（大导航）
+                Object.keys(dbNavMeta).forEach(series => {
+                    const isSelected = currentFilterSeries === series;
+                    navContainer.innerHTML += `
+                        <a href="#/series/${encodeURIComponent(series)}" class="hover:text-amber-500 transition-colors ${isSelected ? 'text-amber-500 font-bold border-b-2 border-amber-500 pb-1' : ''}">${series}</a>
+                    `;
+                });
+            } catch (e) {
+                console.error("生成导航元数据出错:", e);
+            }
+        }
+
+        // 渲染主页二级药丸标签栏 (如果是某大系列，二级药丸只展示该系列下存在的分类)
         function renderCategoryFilters() {
             const container = document.getElementById('category-filter-container');
             if (!container) return;
+
+            let allowedCategories = activeCategories; // 默认展示全局设置的分类
+            
+            // 如果目前选中了某个一级大系列，二级药丸只展示属于这个系列底下的分类！
+            if (currentFilterSeries && dbNavMeta[currentFilterSeries]) {
+                allowedCategories = dbNavMeta[currentFilterSeries];
+            }
+
             container.innerHTML = `
                 <button onclick="filterByCategory('')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${!currentFilterCategory ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
                     全部
                 </button>
             `;
-            activeCategories.forEach(cat => {
+            allowedCategories.forEach(cat => {
                 const isSelected = currentFilterCategory === cat;
                 container.innerHTML += `
                     <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${isSelected ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
@@ -369,7 +415,7 @@
 
         async function filterByCategory(cat) {
             currentFilterCategory = cat;
-            currentPageNum = 1; // 切换分类时重置回第 1 页
+            currentPageNum = 1;
             renderCategoryFilters();
             await fetchPostsAndRender(1);
         }
@@ -382,18 +428,20 @@
 
         async function triggerSearch() {
             currentSearchQuery = document.getElementById('search-input').value.trim();
-            currentPageNum = 1; // 搜索时重置回第 1 页
+            currentPageNum = 1;
             await fetchPostsAndRender(1);
         }
 
+        // 首页展现逻辑（重置所有大类和小类过滤）
         async function showHomeView() {
-            currentFilterCategory = "";
-            currentSearchQuery = "";
-            currentPageNum = 1; // 重置页码
+            currentFilterSeries = "";    // 清空大系列
+            currentFilterCategory = "";  // 清空二级分类
+            currentSearchQuery = "";     // 清空搜索
             const sInput = document.getElementById('search-input');
             if (sInput) sInput.value = "";
 
-            renderCategoryFilters();
+            await fetchNavMeta();        // 重新同步导航
+            renderCategoryFilters();     // 展现全部二级标签
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
@@ -403,17 +451,36 @@
             await fetchPopularPosts();
         }
 
-        // 核心渲染器 (支持动态页码渲染和 D1 API 分页数据格式)
+        // 切换到具体大系列下的视图
+        async function showSeriesView(seriesName) {
+            currentFilterSeries = seriesName; // 设为当前大系列
+            currentFilterCategory = "";       // 重置二级类目
+            currentSearchQuery = "";
+            const sInput = document.getElementById('search-input');
+            if (sInput) sInput.value = "";
+
+            await fetchNavMeta();             // 重新标亮顶层大系列链接
+            renderCategoryFilters();          // 动态重新渲染二级分类小药丸！
+
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('post-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+            
+            await fetchPostsAndRender(1);
+            await fetchPopularPosts();
+        }
+
+        // 4 列奶油栅格卡片核心渲染器 (支持 R2 封面图、一键跳转以及独立排版模式)
         async function fetchPostsAndRender(page = 1) {
-            currentPageNum = page; // 缓存当前页
+            currentPageNum = page;
             const container = document.getElementById('posts-list-container');
             if (!container) return;
             container.innerHTML = '<p class="text-zinc-400 text-sm">正在加载中...</p>';
 
             try {
-                // 向 D1 发起携带 page 和 limit (每页12条) 的分页请求
                 let url = `./api/posts?page=${page}&limit=12&_t=${Date.now()}`;
                 if (currentFilterCategory) url += `&category=${encodeURIComponent(currentFilterCategory)}`;
+                if (currentFilterSeries) url += `&series=${encodeURIComponent(currentFilterSeries)}`;
                 if (currentSearchQuery) url += `&q=${encodeURIComponent(currentSearchQuery)}`;
 
                 const response = await fetch(url);
@@ -436,35 +503,36 @@
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none">BLOGS</div>`;
 
+                    // 根据 layout_mode 判断：如果是 standard 显示 2 行摘要，如果是 simple 则完全不显示摘要
+                    const summaryHtml = (post.layout_mode !== 'simple')
+                        ? `<p class="text-zinc-500 text-xs leading-relaxed line-clamp-2">${post.summary}</p>`
+                        : '';
+
                     container.innerHTML += `
                         <div class="group bg-white rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
                             <div>
-                                <div class="h-44 w-full overflow-hidden relative bg-zinc-50">
+                                <!-- 特色封面图：包住 A 标签支持点击跳转 -->
+                                <a href="#/post/${post.id}" class="block h-44 w-full overflow-hidden relative bg-zinc-50">
                                     ${coverHtml}
                                     <span class="absolute top-3 left-3 bg-zinc-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase">${post.category || '未分类'}</span>
-                                </div>
+                                </a>
                                 <div class="p-5 space-y-2">
-                                    <h3 class="text-base font-bold text-zinc-900 line-clamp-2 group-hover:text-amber-500 transition-colors">
+                                    <!-- 标题限制单行：line-clamp-1 -->
+                                    <h3 class="text-sm font-bold text-zinc-900 line-clamp-1 group-hover:text-amber-500 transition-colors">
                                         <a href="#/post/${post.id}">${post.title}</a>
                                     </h3>
-                                    <p class="text-zinc-500 text-xs leading-relaxed line-clamp-3">${post.summary}</p>
+                                    ${summaryHtml}
                                 </div>
                             </div>
-                            <div class="px-5 pb-5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400">
-                                <div class="flex items-center space-x-1.5">
-                                    <span class="w-4 h-4 bg-zinc-100 rounded-full flex items-center justify-center text-[10px]">👤</span>
-                                    <span class="font-medium">admin</span>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <span>📅 ${post.date}</span>
-                                    <span>👁️ ${post.views}</span>
-                                </div>
+                            <!-- 底端 Meta 栏：完全移除 👤 admin 以保持极致干净 -->
+                            <div class="px-5 pb-5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[10px] text-zinc-400">
+                                <span>📅 ${post.date}</span>
+                                <span>👁️ ${post.views}</span>
                             </div>
                         </div>
                     `;
                 });
 
-                // 调用底部分页条生成器
                 renderPagination(total, limit, page);
 
             } catch (err) {
@@ -472,25 +540,22 @@
             }
         }
 
-        // 【精修升级】复刻深色复古页码导航条 (Ellipsis 折叠页码算法)
         function renderPagination(total, limit, currentPage) {
             const container = document.getElementById('pagination-container');
             if (!container) return;
 
             const totalPages = Math.ceil(total / limit);
             if (totalPages <= 1) {
-                container.innerHTML = ''; // 如果只有 1 页，不显示分页条
+                container.innerHTML = '';
                 return;
             }
 
             let pageHtml = "";
 
-            // 1. 上一页 按钮
             if (currentPage > 1) {
                 pageHtml += `<button onclick="fetchPostsAndRender(${currentPage - 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">« 上一页</button>`;
             }
 
-            // 算法：限制中间显示的页码，多余的用 ... 代替 (复刻截图效果)
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, currentPage + 2);
 
@@ -503,7 +568,6 @@
 
             for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPage) {
-                    // 当前页使用橙色高亮
                     pageHtml += `<span class="px-3 py-1.5 text-xs font-bold bg-amber-500 text-white rounded shadow-sm">${i}</span>`;
                 } else {
                     pageHtml += `<button onclick="fetchPostsAndRender(${i})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${i}</button>`;
@@ -517,7 +581,6 @@
                 pageHtml += `<button onclick="fetchPostsAndRender(${totalPages})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${totalPages}</button>`;
             }
 
-            // 2. 下一页 按钮
             if (currentPage < totalPages) {
                 pageHtml += `<button onclick="fetchPostsAndRender(${currentPage + 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">下一页 »</button>`;
             }
@@ -784,10 +847,6 @@
             try {
                 const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
-                
-                // 注意：由于 GET 接口在不传 page 时默认执行分页，
-                // 后台管理表格需要获取完整的未分页数据。
-                // 接口默认逻辑如果没有 page 限制就会分页，但管理后台数据较少时直接使用 results
                 const postsArr = posts.results || posts;
                 tbody.innerHTML = '';
 
@@ -800,10 +859,10 @@
                     tbody.innerHTML += `
                         <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
                             <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
-                            <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.category || '未分类'}</span></td>
+                            <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
                             <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
                             <td class="py-3.5 text-right space-x-3">
-                                <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}', '${post.category || '未分类'}', '${post.cover || ''}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
+                                <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}', '${post.category || '未分类'}', '${post.cover || ''}', '${post.series || '默认系列'}', '${post.layout_mode || 'standard'}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
                                 <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
                             </td>
                         </tr>
@@ -821,6 +880,8 @@
             document.getElementById('admin-title').value = '';
             document.getElementById('admin-summary').value = '';
             document.getElementById('admin-cover').value = '';
+            document.getElementById('admin-series').value = '默认系列';
+            document.getElementById('admin-layout-mode').value = 'standard';
             document.getElementById('admin-category').value = activeCategories[0] || '未分类';
             vditorInstance.setValue('');
             document.getElementById('editor-title').innerText = '撰写新教程';
@@ -834,12 +895,14 @@
             const title = document.getElementById('admin-title').value.trim();
             const summary = document.getElementById('admin-summary').value.trim();
             const cover = document.getElementById('admin-cover').value.trim();
+            const series = document.getElementById('admin-series').value.trim();
+            const layout_mode = document.getElementById('admin-layout-mode').value;
             const category = document.getElementById('admin-category').value;
             const content = vditorInstance.getValue();
             const btn = document.getElementById('publish-btn');
 
             if (!id || !title || !content) {
-                alert('请填写文章 ID、标题 and 正文');
+                alert('请填写文章 ID、标题和正文');
                 return;
             }
 
@@ -851,7 +914,7 @@
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id, title, summary, content, category, cover,
+                        id, title, summary, content, category, cover, series, layout_mode,
                         date: new Date().toISOString().split('T')[0]
                     })
                 });
@@ -860,6 +923,7 @@
                 alert('文章发布成功！');
                 
                 await refreshAdminTable();
+                await fetchNavMeta(); // 同步更新顶栏导航
                 startNewPost();
             } catch (err) {
                 alert('发布失败: ' + err.message);
@@ -868,7 +932,7 @@
             }
         }
 
-        async function editPost(id, title, summary, category, cover) {
+        async function editPost(id, title, summary, category, cover, series, layout_mode) {
             isEditing = true;
             document.getElementById('editor-title').innerText = `编辑教程: ${title}`;
             document.getElementById('publish-btn').innerText = '保存更新';
@@ -880,6 +944,8 @@
             document.getElementById('admin-title').value = title;
             document.getElementById('admin-summary').value = summary;
             document.getElementById('admin-cover').value = cover || '';
+            document.getElementById('admin-series').value = series || '默认系列';
+            document.getElementById('admin-layout-mode').value = layout_mode || 'standard';
             document.getElementById('admin-category').value = category || '未分类';
 
             vditorInstance.setValue('正在从 R2 提取正文内容...');
@@ -911,6 +977,7 @@
                 if (!res.ok) throw new Error(await res.text());
                 alert('文章和关联图片已完全物理销毁！');
                 await refreshAdminTable();
+                await fetchNavMeta(); // 同步更新导航
             } catch (err) {
                 alert('删除失败: ' + err.message);
             }
