@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blogs.nyc.mn - 数字花园</title>
+    <title>blogs.nyc.mn </title>
     <!-- Tailwind CSS 与 官方排版插件 -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <!-- Highlight.js 代码高亮 -->
@@ -34,7 +34,7 @@
 </head>
 <body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 顶栏 (深度重构自适应菜单栏，大系列在手机端或窗口缩小时自动换行，绝不隐藏) -->
+    <!-- 顶栏 -->
     <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:w-auto">
@@ -44,7 +44,7 @@
                     <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
                 </a>
                 
-                <!-- 【大系列导航栏】：支持手机端、窄屏下自动换行，保持完全可见 -->
+                <!-- 大系列导航栏 -->
                 <div id="series-navbar-container" class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
                 </div>
             </div>
@@ -104,7 +104,8 @@
                 <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-4">
                     <div class="border-b border-zinc-100 pb-2 flex items-center justify-between">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">🔥 热门文章</h3>
-                        <span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
+                        <!-- 动态指示当前显示前几名 -->
+                        <span id="popular-top-badge" class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
                     </div>
                     <div id="popular-posts-container" class="space-y-3"></div>
                 </div>
@@ -112,9 +113,9 @@
 
         </div>
 
-        <!-- 视图二：文章详情页 (宽度已升级为更宽舒展的 5xl) -->
+        <!-- 视图二：文章详情页 (限宽 5xl) -->
         <div id="post-view" class="hidden max-w-5xl mx-auto bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
-            <a href="#/" class="mb-8 inline-block text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
+            <a href="#/" class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
                 ← 返回首页
             </a>
             <div class="mb-6 text-xs text-zinc-400 flex gap-4 border-b border-zinc-100 pb-4">
@@ -154,6 +155,7 @@
         let dbNavMeta = {};              
         let currentPageNum = 1;
         let globalLayoutMode = "standard";
+        let globalPopularLimit = 5; // 缓存全局热门文章展示数量，默认为 5
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -195,11 +197,18 @@
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
                 const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
                 globalLayoutMode = data.site_layout_mode || "standard";
+                
+                // 动态载入热门文章显示数量
+                globalPopularLimit = parseInt(data.site_popular_limit) || 5;
 
                 document.title = title;
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
+                
+                // 动态更新侧边栏的热门标志标签，例如：TOP 8
+                const badge = document.getElementById('popular-top-badge');
+                if (badge) badge.innerText = `TOP ${globalPopularLimit}`;
 
                 renderCustomNavbarLinks(rawNavLinks);
                 renderCategoryFilters();
@@ -323,7 +332,6 @@
             await fetchPopularPosts();
         }
 
-        // 4列奶油栅格核心渲染器 (已全面加固 GPU 加速并采用自适应 aspect-video 彻底修复旋转/缩放错落)
         async function fetchPostsAndRender(page = 1) {
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
@@ -352,7 +360,6 @@
                 }
 
                 posts.forEach((post, index) => {
-                    // 1. 为封面图添加 rounded-t-2xl，防止 scale 动画导致的直角临时溢出 Bug
                     const coverHtml = post.cover 
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none rounded-t-2xl">BLOGS</div>`;
@@ -364,8 +371,6 @@
                     container.innerHTML += `
                         <div class="group bg-white rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
                             <div>
-                                <!-- 2. 核心大重构：高度由 h-44 改为标准的 aspect-video (16:9比例)，任何分辨率下图片都完美缩放，绝无上下裁剪显示不全 -->
-                                <!-- 加上 transform translate-z-0 isolate 强制开启 Webkit GPU 渲染层，彻底解决圆角临时直角化 Bug -->
                                 <a href="#/post/${post.id}" class="block aspect-video w-full overflow-hidden relative bg-zinc-50 rounded-t-2xl transform translate-z-0 isolate">
                                     ${coverHtml}
                                     <span class="absolute top-3 left-3 bg-zinc-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase z-10">${post.category || '未分类'}</span>
@@ -440,13 +445,15 @@
             container.innerHTML = pageHtml;
         }
 
+        // 【安全动态热门限制】：不再写死为 5，而是根据全局 D1 获取到的 globalPopularLimit 动态控制侧边栏推荐数量
         async function fetchPopularPosts() {
             const container = document.getElementById('popular-posts-container');
             if (!container) return;
             container.innerHTML = '<p class="text-zinc-400 text-xs">读取中...</p>';
 
             try {
-                const response = await fetch(`./api/posts?popular=5&_t=${Date.now()}`);
+                // 动态传入参数
+                const response = await fetch(`./api/posts?popular=${globalPopularLimit}&_t=${Date.now()}`);
                 const posts = await response.json();
                 container.innerHTML = '';
 
@@ -457,8 +464,8 @@
 
                 posts.forEach((post, index) => {
                     const thumbHtml = post.cover 
-                        ? `<img src="${post.cover}" class="w-full h-full object-cover animate-fade-in" alt="">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)}"></div>`;
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover rounded-md animate-fade-in" alt="">`
+                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} rounded-md"></div>`;
 
                     container.innerHTML += `
                         <a href="#/post/${post.id}" class="flex items-center gap-3 p-1.5 hover:bg-zinc-50 rounded-lg transition-colors group animate-fade-in">
@@ -469,7 +476,7 @@
                                 <h4 class="text-xs font-bold text-zinc-800 line-clamp-2 leading-snug group-hover:text-amber-500 transition-colors">${post.title}</h4>
                                 <div class="text-[9px] text-zinc-400 mt-1 flex justify-between">
                                     <span>${post.date}</span>
-                                    <span class="font-bold text-amber-500">🔥 ${post.views}</span>
+                                    <span class="font-bold text-amber-500">👁️ ${post.views}</span>
                                 </div>
                             </div>
                         </a>
