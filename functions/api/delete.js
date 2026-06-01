@@ -24,16 +24,46 @@ export async function onRequestPost(context) {
     
     if (r2Object) {
       const mdText = await r2Object.text();
-      // 正则表达式匹配：该文章内引用的所有属于您 R2 自定义域名的图片文件名
-      const r2DomainEscaped = env.R2_CUSTOM_DOMAIN.replace(/\./g, '\\.');
-      const imgRegex = new RegExp(`https://${r2DomainEscaped}/([^\\)\\s\\?]+)`, "g");
-      
-      let match;
-      while ((match = imgRegex.exec(mdText)) !== null) {
-        const fileName = match[1];
-        // 排除存储在虚拟目录 posts/ 下的文章本身，只删除直接上传在根目录的图片对象
-        if (fileName && !fileName.startsWith("posts/")) {
-          await env.MY_BUCKET.delete(fileName); // 从 R2 物理销毁图片
+
+      // 1. 优先：从 D1 数据库中动态获取配置好的 R2 域名
+      let r2Domain = "";
+      try {
+        const row = await env.DB.prepare("SELECT value FROM config WHERE key = 'site_r2_domain'").first();
+        if (row && row.value && row.value !== "undefined" && row.value !== "null") {
+          r2Domain = row.value.trim();
+        }
+      } catch (dbErr) {
+        // 数据库异常
+      }
+
+      // 2. 备选：如果 D1 为空，则尝试读取原环境变量
+      if (!r2Domain && env.R2_CUSTOM_DOMAIN && env.R2_CUSTOM_DOMAIN !== "undefined" && env.R2_CUSTOM_DOMAIN !== "null") {
+        r2Domain = env.R2_CUSTOM_DOMAIN;
+      }
+
+      // 3. 剥离域名中的协议头与多余路径，确保其为纯域名格式 (例如：images.blogs.nyc.mn)
+      let r2DomainHost = r2Domain;
+      if (r2DomainHost) {
+        r2DomainHost = r2DomainHost.replace(/^https?:\/\//i, ""); // 去掉 http:// 或 https://
+        r2DomainHost = r2DomainHost.split('/')[0];               // 去掉可能残留的末尾路径及斜杠
+      }
+
+      // 4. 只有在成功获取到域名的情况下，才执行正则匹配并物理删除图片
+      if (r2DomainHost && r2DomainHost !== "undefined" && r2DomainHost !== "null") {
+        const r2DomainEscaped = r2DomainHost.replace(/\./g, '\\.');
+        const imgRegex = new RegExp(`https://${r2DomainEscaped}/([^\\)\\s\\?]+)`, "g");
+        
+        let match;
+        while ((match = imgRegex.exec(mdText)) !== null) {
+          const fileName = match[1];
+          // 排除存储在虚拟目录 posts/ 下的文章本身，只删除直接上传在根目录的图片对象
+          if (fileName && !fileName.startsWith("posts/")) {
+            try {
+              await env.MY_BUCKET.delete(fileName); // 从 R2 物理销毁图片
+            } catch (delErr) {
+              // 容错处理：即使个别图片删除失败，也不阻碍整篇文章的删除流程
+            }
+          }
         }
       }
     }
