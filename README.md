@@ -61,6 +61,7 @@ INSERT OR IGNORE INTO config (key, value) VALUES ('site_series', '["科学上网
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_nav_links', '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}, {"name": "IP查询", "url": "https://ip.blogs.nyc.mn"}, {"name": "It-Tools工具箱", "url": "https://it.blogs.nyc.mn"}]');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_layout_mode', 'standard');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_popular_limit', '5');
+INSERT OR IGNORE INTO config (key, value) VALUES ('site_r2_domain', 'https://images.blogs.nyc.mn');
 ```
 
 ---
